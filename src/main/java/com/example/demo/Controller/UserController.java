@@ -11,10 +11,10 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/airplane")
-public class AirplaneController {
+public class UserController {
 
     @EJB
-    UserService airplaneService;
+    UserService userService;
 
     @GET
     @Path("/")
@@ -26,7 +26,7 @@ public class AirplaneController {
     @Path("/getAll")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll(){
-        List<User> result = airplaneService.getAll();
+        List<User> result = userService.getAll();
         System.out.println(result);
         return Response.ok().entity(result).build();
     }
@@ -38,7 +38,7 @@ public class AirplaneController {
         try {
             return  Response
                     .status(Response.Status.OK)
-                    .entity((airplaneService.getAirplaneById(id)))
+                    .entity((userService.getUserById(id)))
                     .build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,48 +52,50 @@ public class AirplaneController {
     @POST
     @Path("/create")
     public Response saveClient(
-            @FormParam("name") String name,
-            @FormParam("amount") int amount) {
+            @FormParam("firstName") String firstName,
+            @FormParam("lastName") String lastName) {
         try {
-            User airplane = new User(null, name, amount, null);
-            airplaneService.createNewUser(airplane);
+            User user = new User();
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            userService.createNewUser(user);
             return Response.ok().build();
         } catch (Exception e) {
             return Response.serverError().build();
         }
     }
 
-    @PUT
-    @Path("/updateAirplane/{id}")
-    public Response updateClient(@FormParam("name") String name, @PathParam("id") Long id) {
-        try {
-            airplaneService.updateAirplaneByName(id, name);
-            return Response.ok().build();
-        } catch (Exception e) {
-            return Response.serverError().build();
-        }
-    }
+//    @PUT
+//    @Path("/updateAirplane/{id}")
+//    public Response updateClient(@FormParam("name") String name, @PathParam("id") Long id) {
+//        try {
+//            userService.(id, name);
+//            return Response.ok().build();
+//        } catch (Exception e) {
+//            return Response.serverError().build();
+//        }
+//    }
 
     @DELETE
     @Path("/delete/{id}")
     public Response deleteById(@PathParam("id") Long id) {
         try {
-            airplaneService.deleteAirplaneById(id);
+            userService.deleteUserById(id);
             return Response.ok().build();
         } catch (Exception e) {
             return Response.serverError().build();
         }
     }
 
-    @PUT
-    @Path("/addAirplaneToFlight/{airplaneId}/{flightId}")
-    public Response addAirplaneToFlight(@PathParam("airplaneId") Long id,
-                                        @PathParam("flightId") Long id2) {
-        try{
-            airplaneService.addAirplaneToFlight(id, id2);
-            return Response.ok().build();
-        } catch (Exception e){
-            return Response.serverError().build();
-        }
-    }
+//    @PUT
+//    @Path("/addAirplaneToFlight/{airplaneId}/{flightId}")
+//    public Response addAirplaneToFlight(@PathParam("airplaneId") Long id,
+//                                        @PathParam("flightId") Long id2) {
+//        try{
+//            userService.addAirplaneToFlight(id, id2);
+//            return Response.ok().build();
+//        } catch (Exception e){
+//            return Response.serverError().build();
+//        }
+//    }
 }

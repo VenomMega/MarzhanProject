@@ -18,8 +18,6 @@ public class User {
 
     private String firstName;
     private String lastName;
-    private Boolean isAdmin;
-    private Boolean isActive;
 
 //    @OneToOne
 //    private Shop flight;

@@ -17,7 +17,7 @@ public class UserService {
 
     public List<User> getAll(){ return userRepository.getAll();}
 
-    public User getAirplaneById(Long id) {
+    public User getUserById(Long id) {
         return userRepository.findById(id, HibernateSessionFactoryUtil.getSessionFactory().openSession());
     }
 

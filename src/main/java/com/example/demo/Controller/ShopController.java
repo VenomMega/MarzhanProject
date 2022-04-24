@@ -1,7 +1,9 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Database.HibernateSessionFactoryUtil;
+import com.example.demo.Entity.Product;
 import com.example.demo.Entity.Shop;
+import com.example.demo.Services.ProductService;
 import com.example.demo.Services.ShopService;
 
 import javax.ejb.EJB;
@@ -10,11 +12,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/flight")
+@Path("/shop")
 public class ShopController {
 
     @EJB
     ShopService shopService;
+    @EJB
+    ProductService productService;
 
     @GET
     @Path("/")
@@ -38,7 +42,7 @@ public class ShopController {
         try {
             return  Response
                     .status(Response.Status.OK)
-                    .entity((shopService.getFlightById(id)))
+                    .entity((shopService.getShopById(id)))
                     .build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,10 +56,13 @@ public class ShopController {
     @POST
     @Path("/create")
     public Response saveClient(
-            @FormParam("name") String name) {
+            @FormParam("name") String name, @FormParam("location") String location) {
         try {
-            Shop flight = new Shop(null, name, null, null);
-            shopService.createNewFlight(flight);
+            Shop shop = new Shop();
+            shop.setName(name);
+            shop.setLocation(location);
+            shop.setProducts(null);
+            shopService.createNewShop(shop);
             return Response.ok().build();
         } catch (Exception e) {
             return Response.serverError().build();
@@ -63,10 +70,11 @@ public class ShopController {
     }
 
     @PUT
-    @Path("/updateFlight/{id}")
+    @Path("/updateShop/{id}")
     public Response updateClient(@FormParam("name") String name, @PathParam("id") Long id) {
         try {
-            shopService.updateFlightByName(id, name);
+            Product product = productService.getProducttById(id);
+            shopService.addProductToShop(id, product);
             return Response.ok().build();
         } catch (Exception e) {
             return Response.serverError().build();
@@ -77,7 +85,7 @@ public class ShopController {
     @Path("/delete/{id}")
     public Response deleteById(@PathParam("id") Long id) {
         try {
-            shopService.deleteAirplaneById(id);
+            shopService.deleteShopById(id);
             return Response.ok().build();
         } catch (Exception e) {
             return Response.serverError().build();
