@@ -4,6 +4,8 @@ import com.example.demo.Database.HibernateSessionFactoryUtil;
 import com.example.demo.Entity.Product;
 import com.example.demo.Services.ProductService;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -11,6 +13,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/product")
+@PermitAll
 public class ProductController {
 
     @EJB
@@ -18,6 +21,7 @@ public class ProductController {
 
     @GET
     @Path("/")
+    @PermitAll
     public String hello(){
         HibernateSessionFactoryUtil.getSessionFactory().openSession();
         return "Hello";
@@ -25,6 +29,7 @@ public class ProductController {
     @GET
     @Path("/getAll")
     @Produces(MediaType.APPLICATION_JSON)
+    @PermitAll
     public Response getAll(){
         List<Product> result = productService.getAll();
         System.out.println(result);
@@ -34,6 +39,7 @@ public class ProductController {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @PermitAll
     public Response getClient(@PathParam("id") Long id) {
         try {
             return  Response
@@ -51,6 +57,7 @@ public class ProductController {
 
     @POST
     @Path("/create")
+    @RolesAllowed("ADMIN")
     public Response saveClient(
                                @FormParam("name") String name, @FormParam("price") int price,
                                 @FormParam("amount") int amount) {
