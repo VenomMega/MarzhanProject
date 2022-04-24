@@ -23,5 +23,5 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "shop", referencedColumnName = "id")
-    private Product airport;
+    private Shop shop;
 }
